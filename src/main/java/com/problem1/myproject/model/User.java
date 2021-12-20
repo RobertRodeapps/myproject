@@ -1,4 +1,4 @@
-package com.problem1.myproject.domain;
+package com.problem1.myproject.model;
 
 import lombok.Data;
 
@@ -28,7 +28,15 @@ public class User {
     private Date dateOfBirth;
     @Column(name =  "balance")
     private Double balance;
-    @ManyToMany
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH}
+    )
+    @JoinTable(
+            name=  "user_coin",
+            joinColumns=@JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_coin")
+    )
     private List<Coin> portofolio;
 
     @Column(name = "role")
