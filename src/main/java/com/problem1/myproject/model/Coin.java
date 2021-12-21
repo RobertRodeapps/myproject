@@ -1,5 +1,6 @@
 package com.problem1.myproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "coin")
+@JsonIgnoreProperties(value= {"holders"})
 public class Coin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +21,7 @@ public class Coin {
     private Double supply;
     @Column(name = "price")
     private Double price;
-    @ManyToMany(        ///TODO ASK IF I HAVE TO DO THIS HOLDERS LIST
+     @ManyToMany(        ///TODO ASK IF I HAVE TO DO THIS HOLDERS LIST
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH}
     )
