@@ -59,4 +59,19 @@ public class UserService implements IUserService {
 
         this.userRepo.deleteById(theId);
     }
+
+    @Override
+    public List<Coin> getPortofolio(long userId){
+        User theUser = this.findById(userId);
+        return theUser.getPortofolio();
+    }
+
+    @Override
+    @Transactional
+    public List<Coin> buyCoin(long userId,Coin theCoin){
+        User theUser = this.findById(userId);                   ///geting the user with id userId
+        List<Coin> portofolio = theUser.getPortofolio();        ///adding to the portofolio list the new coin
+        portofolio.add(theCoin);
+        return portofolio;// sau theUser.getPortofolio();       /// returning the portofolio
+    }
 }

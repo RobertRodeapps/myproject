@@ -86,4 +86,23 @@ public class UserRestController {
         this.userService.deleteById(userId);
         return deletedUser;
     }
+
+    @GetMapping("/portofolio/{userId}")
+    @Transactional
+    public List<Coin> getPortofolio(@PathVariable long userId){
+        return this.userService.getPortofolio(userId);
+    }
+
+
+    ///requires a json (Coin) and  user id in the path and will append to the portofolio of that user the required coin
+    ///return the portofolio of that user
+    @PutMapping("/buy/{userId}")  ///TODO MAYBE ADD QUANTITY LATER
+    @Transactional
+    public List<Coin> buyCoin(@PathVariable long userId, @RequestBody Coin theCoin){
+
+
+        return  this.userService.buyCoin(userId,theCoin);
+
+
+    }   ///TODO it doesnt work, i think its harder than i thought
 }
