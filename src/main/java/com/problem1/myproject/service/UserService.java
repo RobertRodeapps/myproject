@@ -2,7 +2,7 @@ package com.problem1.myproject.service;
 
 import com.problem1.myproject.exceptions.ObjectNotFoundException;
 import com.problem1.myproject.model.Coin;
-import com.problem1.myproject.model.User;
+import com.problem1.myproject.model.MyUser;
 import com.problem1.myproject.repository.UserRepositoryJPA;
 import com.problem1.myproject.service.implementation.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,36 +25,35 @@ public class UserService implements IUserService {
     @Override
     @Transactional
 
-    public List<User> findAll() {
+    public List<MyUser> findAll() {
         return this.userRepo.findAll();
     }
 
     @Override
     @Transactional
 
-    public User findById(long theId)
+    public MyUser findById(long theId)
     {
-        Optional<User> result = this.userRepo.findById(theId);
-        User theUser = new User();
+        Optional<MyUser> result = this.userRepo.findById(theId);
+        MyUser theMyUser = new MyUser();
         if(result.isPresent()) {
-            theUser = result.get();
+            theMyUser = result.get();
 
         }else{
             throw new ObjectNotFoundException("The User with id " + theId + " was not found.\n");
         }
 
-        return theUser;
+        return theMyUser;
     }
 
     @Override
     @Transactional
-    public void save(User theUser) {
-        this.userRepo.save(theUser);
+    public void save(MyUser theMyUser) {
+        this.userRepo.save(theMyUser);
     }
 
     @Override
     @Transactional
-
     public void deleteById(long theId) {
 
         this.userRepo.deleteById(theId);
@@ -62,15 +61,15 @@ public class UserService implements IUserService {
 
     @Override
     public List<Coin> getPortofolio(long userId){
-        User theUser = this.findById(userId);
-        return theUser.getPortofolio();
+        MyUser theMyUser = this.findById(userId);
+        return theMyUser.getPortofolio();
     }
 
     @Override
     @Transactional
     public List<Coin> buyCoin(long userId,Coin theCoin){
-        User theUser = this.findById(userId);                   ///geting the user with id userId
-        List<Coin> portofolio = theUser.getPortofolio();        ///adding to the portofolio list the new coin
+        MyUser theMyUser = this.findById(userId);                   ///geting the user with id userId
+        List<Coin> portofolio = theMyUser.getPortofolio();        ///adding to the portofolio list the new coin
         portofolio.add(theCoin);
         return portofolio;// sau theUser.getPortofolio();       /// returning the portofolio
     }

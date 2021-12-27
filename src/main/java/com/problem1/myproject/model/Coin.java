@@ -30,5 +30,5 @@ public class Coin {
             joinColumns=@JoinColumn(name = "id_coin"),
             inverseJoinColumns = @JoinColumn(name = "id_user")
     )*/
-    private List<User> holders;
+    private List<MyUser> holders;
 }

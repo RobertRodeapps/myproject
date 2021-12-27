@@ -12,12 +12,8 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @JsonIgnoreProperties(value= {"portofolio"})
-public class User {
-    enum Roles {
-        ADMIN,
-        USER,
-        GUEST
-    }
+public class MyUser {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

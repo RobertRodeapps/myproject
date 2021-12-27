@@ -1,17 +1,17 @@
 package com.problem1.myproject.service.implementation;
 
 import com.problem1.myproject.model.Coin;
-import com.problem1.myproject.model.User;
+import com.problem1.myproject.model.MyUser;
 
 import java.util.List;
 
 public interface IUserService {
 
-        public List<User> findAll();
+        public List<MyUser> findAll();
 
-        public User findById(long theId);
+        public MyUser findById(long theId);
 
-        public void save(User theUser);
+        public void save(MyUser theMyUser);
 
         public void deleteById(long theId);
 
