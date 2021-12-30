@@ -21,14 +21,6 @@ public class Coin {
     private Double supply;
     @Column(name = "price")
     private Double price;
-     @ManyToMany(mappedBy = "portofolio")    ///TODO ASK IF I HAVE TO DO THIS HOLDERS LIST
-     /*       fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH}
-    )
-    @JoinTable(
-            name=  "user_coin",
-            joinColumns=@JoinColumn(name = "id_coin"),
-            inverseJoinColumns = @JoinColumn(name = "id_user")
-    )*/
+    @ManyToMany(mappedBy = "portofolio")
     private List<User> holders;
 }

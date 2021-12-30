@@ -1,9 +1,9 @@
-package com.problem1.myproject.service;
+package com.problem1.myproject.service.implementation;
 
 import com.problem1.myproject.exceptions.ObjectNotFoundException;
 import com.problem1.myproject.model.Coin;
-import com.problem1.myproject.repository.CoinRepositoryJPA;
-import com.problem1.myproject.service.implementation.ICoinService;
+import com.problem1.myproject.repository.CoinRepository;
+import com.problem1.myproject.service.ICoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,21 +14,21 @@ import java.util.Optional;
 @Service
 public class CoinService implements ICoinService {
 
-    private CoinRepositoryJPA coinRepo;
+    private CoinRepository coinRepo;
 
     @Autowired
-    public CoinService(CoinRepositoryJPA coinRepo) {
+    public CoinService(CoinRepository coinRepo) {
         this.coinRepo = coinRepo;
     }
 
     @Override
-    @Transactional
+
     public List<Coin> findAll() {
         return this.coinRepo.findAll();
     }
 
     @Override
-    @Transactional
+
     public Coin findById(long theId) {
 
         Optional<Coin> result = coinRepo.findById(theId);
@@ -47,13 +47,13 @@ public class CoinService implements ICoinService {
     }
 
     @Override
-    @Transactional
+
     public void save(Coin theCoin) {
         coinRepo.save(theCoin);
     }
 
     @Override
-    @Transactional
+
     public void deleteById(long theId) {
         coinRepo.deleteById(theId);
     }

@@ -1,17 +1,33 @@
 package com.problem1.myproject.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.problem1.myproject.exceptions.ObjectNotFoundException;
 import com.problem1.myproject.model.Coin;
+import com.problem1.myproject.model.RolesEnum;
 import com.problem1.myproject.model.User;
-import com.problem1.myproject.model.dto.CoinDTO;
 import com.problem1.myproject.model.dto.UserDTO;
 import com.problem1.myproject.model.dto.UserUpdateDTO;
-import com.problem1.myproject.service.UserService;
+import com.problem1.myproject.service.implementation.UserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/menu")
@@ -60,7 +76,7 @@ public class UserRestController {
 
     @PutMapping("/users/{userId}")
     @Transactional
-    public User updateCoin(@RequestBody UserUpdateDTO theUserDTO, @PathVariable long userId){
+    public UserUpdateDTO updateUser(@RequestBody UserUpdateDTO theUserDTO, @PathVariable long userId){
         User oldUser = this.userService.findById(userId);
         if (oldUser == null){
             throw new ObjectNotFoundException("The User with id " + userId + " was not found.\n");
@@ -72,19 +88,29 @@ public class UserRestController {
         oldUser.setDateOfBirth(theUserDTO.getDateOfBirth());
         oldUser.setPortofolio(theUserDTO.getPortofolio());
 
-        return oldUser;
+        return theUserDTO;
     }
 
     @DeleteMapping("/users/{userId}")
     @Transactional
-    public User deleteCoin(@PathVariable long userId){      ///TODO ASK IF ITS A PROBLEM IF I CANT FIND PORTOFOLIO adn i get an error
+    public UserUpdateDTO deleteUser(@PathVariable long userId){      ///TODO ASK IF ITS A PROBLEM IF I CANT FIND PORTOFOLIO adn i get an error
         User deletedUser = this.userService.findById(userId);
+
         if (deletedUser == null){
             throw new ObjectNotFoundException("The User with id " + userId + " was not found.\n");
         }
 
         this.userService.deleteById(userId);
-        return deletedUser;
+        deletedUser.getPortofolio();
+        UserUpdateDTO oldUser = new UserUpdateDTO();
+        oldUser.setBalance(deletedUser.getBalance());
+        oldUser.setEmail(deletedUser.getEmail());
+        oldUser.setName(deletedUser.getName());
+        oldUser.setRole(deletedUser.getRole());
+        oldUser.setDateOfBirth(deletedUser.getDateOfBirth());
+        oldUser.setPortofolio(deletedUser.getPortofolio());
+        Hibernate.initialize(oldUser.getPortofolio());
+        return oldUser;
     }
 
     @GetMapping("/portofolio/{userId}")
@@ -105,4 +131,53 @@ public class UserRestController {
 
 
     }   ///TODO it doesnt work, i think its harder than i thought
+
+    @GetMapping("/refreshtoken")
+    public void refreshToken (HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            try {
+                String refresh_token = authorizationHeader.substring("Bearer ".length());
+                Algorithm algorithm = Algorithm.HMAC256("${jwt.secret}".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(refresh_token);
+                String username = decodedJWT.getSubject();
+                User user = userService.getUserByEmail(username);
+                 Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+                List<RolesEnum> roles  = new ArrayList<>();
+                roles.add(user.getRole());
+
+                String access_token = String.valueOf(JWT.create()
+                        .withSubject(user.getEmail())
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 11 * 60 * 1000))
+                        .withIssuer(request.getRequestURL().toString())
+                        .withClaim("roles",roles.stream().map(RolesEnum::toString).collect(Collectors.toList()))
+                        .sign(algorithm));
+
+
+                Map<String,String> tokens = new HashMap<>();
+                tokens.put("access_token",access_token);
+                tokens.put("refresh_token",refresh_token);
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(),tokens);
+
+
+            }catch (Exception exception){
+                response.setHeader("Error",exception.getMessage());
+                response.setStatus(FORBIDDEN.value());
+                //response.sendError(FORBIDDEN.value());
+                Map<String,String> error = new HashMap<>();
+
+                error.put("error_message",exception.getMessage());
+                response.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(response.getOutputStream(),error);
+
+            }
+        }else {
+            throw new  RuntimeException("REFresh token is missing");
+        }
+
+     }
+
 }

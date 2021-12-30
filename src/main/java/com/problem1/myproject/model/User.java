@@ -1,6 +1,8 @@
 package com.problem1.myproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,7 +13,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties(value= {"portofolio"})
 public class User {
     enum Roles {
         ADMIN,
@@ -26,9 +27,13 @@ public class User {
     private String name;
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     @Column(name = "date_of_birth")
+    @JsonProperty("date_of_birth")
     private Date dateOfBirth;
     @Column(name =  "balance")
     private Double balance;

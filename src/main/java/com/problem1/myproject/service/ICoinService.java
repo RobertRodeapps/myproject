@@ -1,4 +1,4 @@
-package com.problem1.myproject.service.implementation;
+package com.problem1.myproject.service;
 
 import com.problem1.myproject.model.Coin;
 

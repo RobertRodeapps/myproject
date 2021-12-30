@@ -4,7 +4,7 @@ package com.problem1.myproject.controller;
 import com.problem1.myproject.exceptions.ObjectNotFoundException;
 import com.problem1.myproject.model.Coin;
 import com.problem1.myproject.model.dto.CoinDTO;
-import com.problem1.myproject.service.CoinService;
+import com.problem1.myproject.service.implementation.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
