@@ -37,7 +37,7 @@ public class CoinRestController {
         return theCoin;
     }
 
-    @PostMapping("/coins")
+    @PostMapping("/coins/save")
     @Transactional
     public Coin addCoin(@RequestBody CoinDTO theCoin){
 

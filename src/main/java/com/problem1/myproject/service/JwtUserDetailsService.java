@@ -2,12 +2,15 @@ package com.problem1.myproject.service;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import com.problem1.myproject.model.dto.UserDTO;
 import com.problem1.myproject.model.MyUser;
-import com.problem1.myproject.repository.UserRepositoryJPA;
+import com.problem1.myproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +24,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 
     @Autowired
-    private UserRepositoryJPA userDao;
+    private UserRepository userDao;
 
 
 
@@ -29,12 +32,13 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         MyUser user = userDao.findByEmail(username);
+        List<SimpleGrantedAuthority> roles = null;
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                new ArrayList<>());
+        roles = Arrays.asList(new SimpleGrantedAuthority(user.getRole().toString()));
+        return new User(user.getEmail(), user.getPassword(), roles);
 
     }
 
@@ -43,7 +47,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
 
-    public UserRepositoryJPA save(UserDTO theUserDTO) {
+    public MyUser save(UserDTO theUserDTO) {
         MyUser newMyUser = new MyUser();
         newMyUser.setId(0);
         newMyUser.setBalance(theUserDTO.getBalance());
@@ -53,8 +57,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         newMyUser.setPassword(this.passwordEncoder().encode(theUserDTO.getPassword()));
         newMyUser.setDateOfBirth(theUserDTO.getDateOfBirth());
         newMyUser.setPortofolio(theUserDTO.getPortofolio());
-        userDao.save(newMyUser);
-        return userDao;
+        return userDao.save(newMyUser);
+
     }
 
 }

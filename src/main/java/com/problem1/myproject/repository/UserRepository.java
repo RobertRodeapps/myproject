@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 
-public interface UserRepositoryJPA extends JpaRepository<MyUser,Long> {
+public interface UserRepository extends JpaRepository<MyUser,Long> {
     MyUser findByEmail(String email);
 
 }

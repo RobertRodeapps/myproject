@@ -2,7 +2,7 @@ package com.problem1.myproject.service;
 
 import com.problem1.myproject.exceptions.ObjectNotFoundException;
 import com.problem1.myproject.model.Coin;
-import com.problem1.myproject.repository.CoinRepositoryJPA;
+import com.problem1.myproject.repository.CoinRepository;
 import com.problem1.myproject.service.implementation.ICoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,10 @@ import java.util.Optional;
 @Service
 public class CoinService implements ICoinService {
 
-    private CoinRepositoryJPA coinRepo;
+    private CoinRepository coinRepo;
 
     @Autowired
-    public CoinService(CoinRepositoryJPA coinRepo) {
+    public CoinService(CoinRepository coinRepo) {
         this.coinRepo = coinRepo;
     }
 

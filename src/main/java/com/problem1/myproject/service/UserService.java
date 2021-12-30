@@ -3,9 +3,11 @@ package com.problem1.myproject.service;
 import com.problem1.myproject.exceptions.ObjectNotFoundException;
 import com.problem1.myproject.model.Coin;
 import com.problem1.myproject.model.MyUser;
-import com.problem1.myproject.repository.UserRepositoryJPA;
+import com.problem1.myproject.repository.UserRepository;
 import com.problem1.myproject.service.implementation.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,10 +17,13 @@ import java.util.Optional;
 @Service
 public class UserService implements IUserService {
 
-    private UserRepositoryJPA userRepo;
+    private UserRepository userRepo;
 
     @Autowired
-    public UserService(UserRepositoryJPA userRepo) {
+    private  BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
@@ -49,13 +54,14 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public void save(MyUser theMyUser) {
+        theMyUser.setPassword(passwordEncoder.encode(theMyUser.getPassword()));
         this.userRepo.save(theMyUser);
     }
 
     @Override
     @Transactional
     public void deleteById(long theId) {
-
+       //findById(theId);
         this.userRepo.deleteById(theId);
     }
 

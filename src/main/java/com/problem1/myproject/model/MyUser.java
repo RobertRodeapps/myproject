@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties(value= {"portofolio"})
 public class MyUser {
 
     @Id
