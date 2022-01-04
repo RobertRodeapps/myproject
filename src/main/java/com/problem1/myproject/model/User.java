@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,12 +14,9 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user")
+@RequiredArgsConstructor
 public class User {
-    enum Roles {
-        ADMIN,
-        USER,
-        GUEST
-    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -51,5 +49,6 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private RolesEnum role;
+
 
 }

@@ -47,11 +47,9 @@ public class CoinService implements ICoinService {
     }
 
     @Override
-
     public void save(Coin theCoin) {
         coinRepo.save(theCoin);
     }
-
     @Override
 
     public void deleteById(long theId) {
