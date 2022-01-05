@@ -40,7 +40,7 @@ public class CoinService implements ICoinService {
         }
         else {
             // we didn't find the coin
-            throw new ObjectNotFoundException("Did not find employee id - " + theId);
+            throw new ObjectNotFoundException("Did not find Coin id - " + theId);
         }
 
         return theCoin;
