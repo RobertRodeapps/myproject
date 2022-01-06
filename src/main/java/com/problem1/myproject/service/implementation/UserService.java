@@ -24,12 +24,13 @@ public class UserService implements IUserService, UserDetailsService {
 
     private UserRepository userRepo;
 
-    @Autowired
+    //@Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepo) {
+    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder ) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -73,13 +74,13 @@ public class UserService implements IUserService, UserDetailsService {
         return theUser.getPortofolio();
     }
 
-    @Override
+    /*@Override
     public List<Coin> buyCoin(long userId,Coin theCoin){
         User theUser = this.findById(userId);                   ///geting the user with id userId
         List<Coin> portofolio = theUser.getPortofolio();        ///adding to the portofolio list the new coin
         portofolio.add(theCoin);
         return portofolio;// sau theUser.getPortofolio();       /// returning the portofolio
-    }
+    }*/
     @Override
     public User getUserByEmail(String username){
         return userRepo.findByEmail(username);

@@ -12,10 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
  import org.springframework.boot.test.mock.mockito.MockBean;
+ import org.springframework.security.core.GrantedAuthority;
+ import org.springframework.security.core.authority.SimpleGrantedAuthority;
  import org.springframework.security.core.userdetails.UserDetails;
+ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  import org.springframework.security.crypto.password.PasswordEncoder;
 
  import java.util.ArrayList;
+ import java.util.Collection;
  import java.util.List;
  import java.util.Optional;
 
@@ -31,6 +35,8 @@ class UserServiceTest {
 
         @Mock
         private UserRepository userRepo;
+        @Mock
+        private PasswordEncoder passwordEncoder;
         @InjectMocks
         private UserService userService;
 
@@ -61,19 +67,21 @@ class UserServiceTest {
     }
 
     @Test
-    @Disabled
     void canSave() {
         User newUser = new User(1,"ben","ben.com","1234",null,12.3,null, RolesEnum.ADMIN);
+
         //when
-         userService.save(newUser);
+        when(passwordEncoder.encode("1234")).thenReturn("encodedMock");
+
+        userService.save(newUser);
 
         //then
         ArgumentCaptor<User> userArgumentCaptor =
                 ArgumentCaptor.forClass(User.class);
         verify(userRepo).save(userArgumentCaptor.capture());
-
         User capturedUser = userArgumentCaptor.getValue();
         assertThat(capturedUser).isEqualTo(newUser);
+
     }
 
     @Test
@@ -115,10 +123,13 @@ class UserServiceTest {
     }
 
     @Test
-    @Disabled
     void loadUserByUsername() {
         User newUser = new User(1,"ben","ben.com","1234",null,12.3,null, RolesEnum.ADMIN);
         when(userRepo.findByEmail(newUser.getEmail())).thenReturn(newUser);
+
+        UserDetails received = userService.loadUserByUsername(newUser.getEmail());
+        assertThat(received.getUsername()).isEqualTo("ben.com");
+        assertThat(received.getPassword()).isEqualTo("1234");
 
     }
 }
