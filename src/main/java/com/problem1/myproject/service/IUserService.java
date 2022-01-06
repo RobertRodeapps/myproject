@@ -21,7 +21,7 @@ public interface IUserService {
 
         ///requires a json (Coin) and  user id in the path and will append to the portofolio of that user the required coin
         ///return the portofolio of that user
-        public List<Coin> buyCoin(long userId,Coin theCoin);
+     //   public List<Coin> buyCoin(long userId,Coin theCoin);
 
     User getUserByEmail(String username);
 }
