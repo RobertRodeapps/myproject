@@ -70,6 +70,7 @@ public class UserRestController {
         newUser.setPassword(theUserDTO.getPassword());
         newUser.setDateOfBirth(theUserDTO.getDateOfBirth());
         newUser.setPortofolio(theUserDTO.getPortofolio());
+
         this.userService.save(newUser);
         return newUser;
     }
