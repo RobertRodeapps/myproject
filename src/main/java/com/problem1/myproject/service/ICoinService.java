@@ -10,7 +10,7 @@ public interface ICoinService {
 
         public Coin findById(long theId);
 
-        public void save(Coin theCoin);
+        public Coin save(Coin theCoin);
 
-        public void deleteById(long theId);
+        public Coin deleteById(long theId);
 }

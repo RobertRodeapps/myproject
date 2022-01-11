@@ -7,11 +7,13 @@ import com.problem1.myproject.service.implementation.UserService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 class UserRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -27,8 +30,6 @@ class UserRestControllerTest {
     private ObjectMapper objectMapper;
 
 
-    @Autowired
-    private UserService userService;
     @Test
     @WithMockUser(username = "user", authorities = {"ADMIN"})
     void getAll() throws Exception {
@@ -45,7 +46,7 @@ class UserRestControllerTest {
 
     @Test
     @WithMockUser(username = "user", authorities = {"ADMIN"})
-    @Disabled
+
     void addUser() throws Exception {
         User userMock = new User(123,"ben","ben.com","1234",null,12.3,null, RolesEnum.ADMIN);
 

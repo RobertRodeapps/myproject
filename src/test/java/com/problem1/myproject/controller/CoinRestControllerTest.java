@@ -50,22 +50,11 @@ class CoinRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    @Autowired
-    private CoinService coinService;
-
     @Test
     @WithMockUser(username = "user", authorities = {"USER"})
     void getRequestTests() throws Exception {
 
- /*        Coin mockCoin = new Coin();
-        mockCoin.setCoinName("MERGE");
-        mockCoin.setId(0);
 
-       coinService.save(mockCoin);
-
-        Coin receivedCoin = coinService.findById(1);
-        assertEquals("MERGE",receivedCoin.getCoinName()); */
 
         mockMvc.perform(get("/menu/coins")
                 .contentType("application/json"))
@@ -78,8 +67,6 @@ class CoinRestControllerTest {
             .contentType("application/json"))
             .andExpect(status().isNotFound());*/
 
-      /*  String received = result.getResponse().getContentAsString();
-        assertThat(received).isEqualTo(coins.toString());*/
     }
 
     @Test

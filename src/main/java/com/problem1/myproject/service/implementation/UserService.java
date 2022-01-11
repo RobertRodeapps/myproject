@@ -5,6 +5,7 @@ import com.problem1.myproject.model.Coin;
 import com.problem1.myproject.model.User;
 import com.problem1.myproject.repository.UserRepository;
 import com.problem1.myproject.service.IUserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,18 +21,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service @Slf4j
+@AllArgsConstructor
 public class UserService implements IUserService, UserDetailsService {
 
     private UserRepository userRepo;
-
-    //@Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder ) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public List<User> findAll() {
@@ -56,16 +51,18 @@ public class UserService implements IUserService, UserDetailsService {
 
 
     @Override
-    public void save(User theUser) {
+    public User save(User theUser) {
         theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
         this.userRepo.save(theUser);
+        return theUser;
     }
 
     @Override
-    public void deleteById(long theId) {
+    public User deleteById(long theId) {
         User user = findById(theId);
 
         this.userRepo.deleteById(theId);
+        return user;
     }
 
     @Override

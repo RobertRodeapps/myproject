@@ -12,8 +12,5 @@ class MyprojectApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-	@Bean
-	PasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
+
 }

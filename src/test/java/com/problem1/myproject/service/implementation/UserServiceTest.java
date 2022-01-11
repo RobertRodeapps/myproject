@@ -51,7 +51,7 @@ class UserServiceTest {
         List<User> receivedUsers = userService.findAll();
         //then
         assertThat(receivedUsers).asList().containsExactly(firstUser,secondUser);
-        verify(userRepo).findAll();
+        verify(userRepo,times(1)).findAll();
     }
 
     @Test
@@ -73,14 +73,11 @@ class UserServiceTest {
         //when
         when(passwordEncoder.encode("1234")).thenReturn("encodedMock");
 
-        userService.save(newUser);
+        User savedUser = userService.save(newUser);
 
         //then
-        ArgumentCaptor<User> userArgumentCaptor =
-                ArgumentCaptor.forClass(User.class);
-        verify(userRepo).save(userArgumentCaptor.capture());
-        User capturedUser = userArgumentCaptor.getValue();
-        assertThat(capturedUser).isEqualTo(newUser);
+        verify(userRepo,times(1)).save(any(User.class));
+        assertThat(newUser).isEqualTo(savedUser);
 
     }
 
@@ -89,9 +86,10 @@ class UserServiceTest {
          User newUser = new User(1,"ben","ben.com","1234",null,12.3,null, RolesEnum.ADMIN);
 
          when(userRepo.findById(1L)).thenReturn(java.util.Optional.of(newUser));
-        userService.deleteById(newUser.getId());
+        User deletedUser = userService.deleteById(newUser.getId());
 
         verify(userRepo,times(1)).deleteById((long)1);
+        assertThat(newUser).isEqualTo(deletedUser);
      }
 
     @Test
@@ -108,7 +106,6 @@ class UserServiceTest {
         assertThat(receivedCoins.size()).isEqualTo(2);
 
         verify(userRepo,times(1)).findById((long)1);
-
 
     }
 

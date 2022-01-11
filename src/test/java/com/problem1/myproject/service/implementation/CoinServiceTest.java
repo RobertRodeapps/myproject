@@ -23,8 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CoinServiceTest {
@@ -44,30 +43,26 @@ class CoinServiceTest {
         List<Coin> receivedCoins = coinService.findAll();
         //then
         assertThat(receivedCoins).asList().containsExactly(firstCoin,secondCoin);
-        verify(coinRepo).findAll();
+        verify(coinRepo,times(1)).findAll();
 
     }
+    @Test
+    void  FindById() {
+        Coin coin = createCoin(1,"ada",12.2,100.2);
 
+        given(coinRepo.findById(anyLong())).willReturn(Optional.of(coin));
+        Coin receivedCoin = coinService.findById(1L);
+
+        assertThat(coin).isEqualTo(receivedCoin);
+    }
     @Test
     void cannotFindById() {
 
         given(coinRepo.findById(1L)).willReturn(Optional.empty());
-/*
-        when(coinService.findById(1L)).thenThrow(new ObjectNotFoundException("Did not find Coin id - 1"));
-        assertThat(coinService.findById(1L)).withFailMessage("Did not find Coin id - 1");
-*/
 
         assertThatThrownBy(() -> coinService.findById(1L))
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessageContaining("Did not find Coin id - 1");
-       /// then(caught).isInstanceOf(ObjectNotFoundException.class);
-
-        /*given(otherServiceMock.bar()).willThrow(new MyException());
-
-        when(() -> myService.foo());
-
-        then(caughtException()).isInstanceOf(MyException.class);*/
-
     }
 
     @Test
@@ -75,25 +70,24 @@ class CoinServiceTest {
         Coin coin = createCoin(1,"ada",12.2,100.2);
 
         //when
-        coinService.save(coin);
+        Coin savedCoin = coinService.save(coin);
 
         //then
-        ArgumentCaptor<Coin> coinArgumentCaptor =
-                ArgumentCaptor.forClass(Coin.class);
-
-        verify(coinRepo).save(coinArgumentCaptor.capture());
-
-        Coin capturedCoin = coinArgumentCaptor.getValue();
-        assertThat(capturedCoin).isEqualTo(coin);
+        assertThat(savedCoin).isEqualTo(coin);
+        verify(coinRepo,times(1)).save(any(Coin.class));
 
     }
 
     @Test
     void deleteById() {
-        Coin coin = createCoin(1,"ada",12.2,100.2);
+        Coin coin = createCoin(3,"ada",12.2,100.2);
+        given(coinRepo.findById(3L)).willReturn(Optional.of(coin));
 
-        coinService.deleteById(coin.getId());
-        verify(coinRepo).deleteById((long)1);
+        Coin deletedCoin = coinService.deleteById(coin.getId());
+
+        assertThat(deletedCoin).isEqualTo(coin);
+        verify(coinRepo,times(1)).deleteById(anyLong());
+
     }
     private Coin createCoin(long id, String name,double price, double supply){
         Coin coin = new Coin();

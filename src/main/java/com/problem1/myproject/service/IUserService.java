@@ -11,9 +11,9 @@ public interface IUserService {
 
         public User findById(long theId);
 
-        public void save(User theUser);
+        public User save(User theUser);
 
-        public void deleteById(long theId);
+        public User deleteById(long theId);
 
         ///it will return the coins bought by a user
         public List<Coin> getPortofolio(long userId);
