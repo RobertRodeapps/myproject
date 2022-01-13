@@ -1,10 +1,8 @@
 package com.problem1.myproject.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
-
+import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -13,12 +11,9 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "user")
+@RequiredArgsConstructor
 public class User {
-    enum Roles {
-        ADMIN,
-        USER,
-        GUEST
-    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -52,4 +47,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RolesEnum role;
 
+
+    public User(long id,String name, String email, String password, Date dateOfBirth, Double balance, List<Coin> portofolio, RolesEnum role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.balance = balance;
+        this.portofolio = portofolio;
+        this.role = role;
+    }
 }

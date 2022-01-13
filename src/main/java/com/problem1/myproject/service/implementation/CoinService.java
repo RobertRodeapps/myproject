@@ -7,7 +7,6 @@ import com.problem1.myproject.service.ICoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,21 +39,23 @@ public class CoinService implements ICoinService {
         }
         else {
             // we didn't find the coin
-            throw new ObjectNotFoundException("Did not find employee id - " + theId);
+            throw new ObjectNotFoundException("Did not find Coin id - " + theId);
         }
 
         return theCoin;
     }
 
     @Override
-
-    public void save(Coin theCoin) {
+    public Coin save(Coin theCoin) {
         coinRepo.save(theCoin);
+        return theCoin;
     }
-
     @Override
 
-    public void deleteById(long theId) {
+    public Coin deleteById(long theId) {
+        Coin existCoin = findById(theId);
+
         coinRepo.deleteById(theId);
+        return existCoin;
     }
 }

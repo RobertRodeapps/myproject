@@ -70,6 +70,7 @@ public class UserRestController {
         newUser.setPassword(theUserDTO.getPassword());
         newUser.setDateOfBirth(theUserDTO.getDateOfBirth());
         newUser.setPortofolio(theUserDTO.getPortofolio());
+
         this.userService.save(newUser);
         return newUser;
     }
@@ -122,7 +123,7 @@ public class UserRestController {
 
     ///requires a json (Coin) and  user id in the path and will append to the portofolio of that user the required coin
     ///return the portofolio of that user
-    @PutMapping("/buy/{userId}")  ///TODO MAYBE ADD QUANTITY LATER
+/*    @PutMapping("/buy/{userId}")  ///TODO MAYBE ADD QUANTITY LATER
     @Transactional
     public List<Coin> buyCoin(@PathVariable long userId, @RequestBody Coin theCoin){
 
@@ -130,7 +131,7 @@ public class UserRestController {
         return  this.userService.buyCoin(userId,theCoin);
 
 
-    }   ///TODO it doesnt work, i think its harder than i thought
+    }   ///TODO it doesnt work, i think its harder than i thought*/
 
     @GetMapping("/refreshtoken")
     public void refreshToken (HttpServletRequest request, HttpServletResponse response) throws IOException {
