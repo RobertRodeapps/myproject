@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
 
-        http.authorizeRequests().antMatchers( "/loginuser","/register","/menu/refreshtoken").permitAll();
+        http.authorizeRequests().antMatchers( "/loginuser","/register","/menu/refreshtoken","/menu/coins/**").permitAll();
         http.authorizeRequests().antMatchers(GET, "/menu/users/**").hasAnyAuthority("ADMIN","USER");
         http.authorizeRequests().antMatchers(DELETE, "/menu/users/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(PUT, "/menu/users/**").hasAnyAuthority("ADMIN");
@@ -52,16 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(PUT, "/menu/coins/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(POST, "/menu/coins/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers(DELETE, "/menu/coins/**").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(GET, "/menu/coins/**").hasAnyAuthority("ADMIN","USER");
+        ///http.authorizeRequests().antMatchers(GET, "/menu/coins/**").hasAnyAuthority("ADMIN","USER");
         http.authorizeRequests().anyRequest().authenticated();
-        // dont authenticate this particular request
-               /* .authorizeRequests().antMatchers("/authenticate", "/register").permitAll()
-                 // all other requests need to be authenticated
-                        anyRequest().authenticated().and().
-                // make sure we use stateless session; session won't be used to
-                // store user's state.
-                        exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-*/
+
         // Add a filter to validate the tokens with every request
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
